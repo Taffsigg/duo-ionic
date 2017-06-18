@@ -1,0 +1,47 @@
+$border-width: 3px;
+
+page-home {
+  .conversation {
+    border-top: $border-width solid map-get($colors, light);
+
+    height: calc(50vh - #{$border-width});
+
+    &:first-of-type {
+      @extend .reverse;
+    }
+  }
+
+  .message-container {
+    .message {
+      @include margin(3px);
+      @include padding(12px);
+      @include border-radius(15px);
+
+      direction: initial;
+      display: inline-block;
+      max-width: 70%;
+    }
+
+    &.incoming {
+      @include direction(ltr);
+
+      .message {
+        background-color: map-get($colors, light);
+        color: black;
+      }
+    }
+
+    &:not(.incoming) {
+      @include direction(rtl);
+
+      .message {
+        background-color: map-get($colors, primary);
+        color: white;
+      }
+    }
+  }
+
+  .select-language {
+    @include padding(17px, 0);
+  }
+}

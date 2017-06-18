@@ -1,0 +1,4 @@
+- Add WK - https://github.com/ionic-team/cordova-plugin-wkwebview-engine.git
+- First entry screen (choose language etc)
+- Splash screen
+- Icons
