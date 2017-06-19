@@ -1,4 +1,4 @@
-<div class="conversation" *ngFor="let user of users; let i = index">
+<div class="conversation" *ngFor="let user of users; let i = index" [class.reverse]="i === 0">
   <ion-content padding>
     <div class="message-container" [class.incoming]="message.user !== user"
          *ngFor="let message of user.history" (click)="message.speak(tts)">

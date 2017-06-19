@@ -1,14 +1,11 @@
-$border-width: 3px;
+$border-width: 1px;
 
 page-home {
+  background-color: white;
+
   .conversation {
-    border-top: $border-width solid map-get($colors, light);
-
+    border-top: $border-width solid rgba(0, 0, 0, 0.3);
     height: calc(50vh - #{$border-width});
-
-    &:first-of-type {
-      @extend .reverse;
-    }
   }
 
   .message-container {
