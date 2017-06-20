@@ -3,6 +3,7 @@ import { Content, IonicPage, Platform } from 'ionic-angular';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { TextToSpeech } from '@ionic-native/text-to-speech';
 import { TranslationProvider } from '../../providers/translation/translation';
+import {MediaCapture} from "@ionic-native/media-capture";
 
 export function nop() {
 }
@@ -12,7 +13,7 @@ export class Message {
   }
 
   speak(tts: TextToSpeech) {
-    tts.speak({ text: this.content, locale: this.language });
+    tts.speak({ text: this.content, locale: this.language, rate: 1 });
   }
 }
 
@@ -61,6 +62,17 @@ export class HomePage {
     platform.ready().then(() => {
       // Init supported languages
       this.speechRecognition.getSupportedLanguages().then(s => this.supportedLanguages = s, nop);
+      // Get permission
+      this.speechRecognition.isRecognitionAvailable().then((available: boolean) => {
+        if (!available) {
+          alert("recognition is not available")
+        } else {
+          this.speechRecognition.hasPermission().then((permission: boolean) => {
+            if (!permission)
+              this.speechRecognition.requestPermission();
+          })
+        }
+      });
     });
 
     this.users[1].language = 'en-US';
