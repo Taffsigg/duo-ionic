@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
-
-const googleTranslate = 'https://translate.googleapis.com/translate_a/single';
+import { translationConfig } from '../../../config';
 
 @Injectable()
 export class TranslationProvider {
-
   constructor(public http: Http) {
   }
 
-  translate(text, sourceLanguage, toLanguage) {
+  translate(text: string, sourceLanguage: string, toLanguage: string): Promise<string> {
+    return this.googleTranslate(text, sourceLanguage, toLanguage);
+  }
+
+  private googleTranslate(text: string, sourceLanguage: string, toLanguage: string): Promise<string> {
     let params = {
       client: 'gtx',
       sl: sourceLanguage,
@@ -20,14 +21,15 @@ export class TranslationProvider {
     };
 
     return new Promise((resolve) => {
-      this.http.get(googleTranslate, { params }).subscribe(responseObj => {
-        let response = responseObj.text();
-        while (response.indexOf(',,') != -1)
-          response = response.replace(/,,/g, ', null,');
-        response = JSON.parse(response);
+      this.http.get(translationConfig.google, { params })
+          .subscribe(responseObj => {
+            let response = responseObj.text();
+            while (response.indexOf(',,') != -1)
+              response = response.replace(/,,/g, ', null,');
+            response = JSON.parse(response);
 
-        resolve(response[0][0][0]);
-      });
+            resolve(response[0][0][0]);
+          });
     });
   }
 }

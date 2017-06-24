@@ -1,46 +1,10 @@
-import { ApplicationRef, Component, QueryList, ViewChildren } from '@angular/core';
-import { Content, IonicPage, Platform } from 'ionic-angular';
+import { Component, EventEmitter, QueryList, ViewChildren } from '@angular/core';
+import { AlertController, Content, IonicPage, Platform } from 'ionic-angular';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
-import { TextToSpeech } from '@ionic-native/text-to-speech';
-import { TranslationProvider } from '../../providers/translation/translation';
-
-export function nop() {
-}
-
-export class Message {
-  constructor(public user: User, private language: string, public content) {
-  }
-
-  speak(tts: TextToSpeech) {
-    tts.speak({ text: this.content, locale: this.language, rate: 1 });
-  }
-}
-
-export class User {
-  language: string = null;
-  history: Array<Message> = [];
-
-  add(tp: TranslationProvider, user: User, text: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (this.language === null) {
-        reject();
-        return;
-      }
-
-      if (user.language === this.language) {
-        this.history.push(new Message(user, this.language, text));
-        reject();
-        return;
-      }
-
-      tp.translate(text, user.language, this.language).then(text => {
-        const message = new Message(user, this.language, text);
-        this.history.push(message);
-        resolve(message);
-      });
-    });
-  }
-}
+import { User } from '../../providers/users/user';
+import { UserController } from '../../providers/users/user-controller';
+import { Message } from '../../providers/messages/message';
+import { MessageController } from '../../providers/messages/message-controller';
 
 @IonicPage()
 @Component({
@@ -52,56 +16,57 @@ export class HomePage {
 
   supportedLanguages: Array<string> = ['en-US', 'he-IL'];
 
-  users: Array<User> = [new User(), new User()];
+  users: Array<User> = [];
 
-  currentlyListening: User = null;
-
-  constructor(private ref: ApplicationRef, platform: Platform, private speechRecognition: SpeechRecognition,
-              public tts: TextToSpeech, public tp: TranslationProvider) {
-    platform.ready().then(() => {
-      // Init supported languages
-      this.speechRecognition.getSupportedLanguages().then(s => this.supportedLanguages = s, nop);
-      // Get permission
-      this.speechRecognition.isRecognitionAvailable().then((available: boolean) => {
-        if (!available) {
-          alert('recognition is not available');
-        } else {
-          this.speechRecognition.hasPermission().then((permission: boolean) => {
-            if (!permission)
-              this.speechRecognition.requestPermission();
-          });
-        }
-      });
-    });
-
-    this.users[1].language = 'en-US';
-    this.users[0].language = 'he-IL';
-
-    this.users.forEach(u => u.add(this.tp, this.users[1], 'Hello').then(() => {
-      this.users.forEach(u => u.add(this.tp, this.users[0], 'מה שלומך?').then(nop, nop));
-    }, nop));
+  constructor(platform: Platform, private speechRecognition: SpeechRecognition, private alertCtrl: AlertController,
+              private userCtrl: UserController, private messageCtrl: MessageController) {
+    platform.ready().then(this.init.bind(this));
   }
 
-  startListening(user: User) {
-    const stop = () => {
-      this.speechRecognition.stopListening();
-      this.currentlyListening = null;
+  private init() {
+    this.getPermission();
+
+    this.speechRecognition.getSupportedLanguages().then(supportedLanguages => {
+      this.supportedLanguages = supportedLanguages.sort();
+      this.initUsers();
+    }, this.initUsers.bind(this));
+  }
+
+  private getPermission() {
+    const notAvailable = () => {
+      this.alertCtrl.create({
+        title: 'Speech recognition is not available',
+        enableBackdropDismiss: false
+      }).present();
     };
 
-    if (this.currentlyListening !== null) {
-      stop();
-      return;
-    }
+    this.speechRecognition.isRecognitionAvailable().then((available: boolean) => {
+      if (!available) {
+        notAvailable();
+      } else {
+        this.speechRecognition.hasPermission().then((permission: boolean) => {
+          if (!permission)
+            this.speechRecognition.requestPermission();
+        });
+      }
+    }, notAvailable);
+  }
 
-    this.currentlyListening = user;
-    this.speechRecognition.startListening({ language: user.language }).subscribe((matches: Array<string>) => {
-      const match = matches[0];
-      this.users.forEach(u => u.add(this.tp, user, match).then(message => {
-        message.speak(this.tts);
-        this.ref.tick();
-        setTimeout(() => this.contents.forEach(content => content.scrollToBottom()), 0);
-      }, nop));
-      stop();
-    });
+  private initUsers() {
+    const messageEmitter: EventEmitter<Message> = new EventEmitter<Message>();
+
+    let userLanguage = navigator.language;
+    if (this.supportedLanguages.indexOf(userLanguage) === -1)
+      userLanguage = null;
+
+    this.users.push(this.userCtrl.create(userLanguage, messageEmitter)); // Create user with local language
+    this.users.push(this.userCtrl.create('en-US', messageEmitter)); // TODO find which country user is in, and use GPS to set language
+
+    messageEmitter.emit(this.messageCtrl.create(this.users[1], 'Initializing'));
+  }
+
+  isListening(): boolean {
+    // if not everybody not listening, someone is
+    return !this.users.every(user => !user.isListening());
   }
 }

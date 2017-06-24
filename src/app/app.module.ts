@@ -9,6 +9,8 @@ import { HomePageModule } from '../pages/home/home.module';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { TextToSpeech } from '@ionic-native/text-to-speech';
 import { HttpModule } from '@angular/http';
+import { MessageController } from '../providers/messages/message-controller';
+import { UserController } from '../providers/users/user-controller';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { HttpModule } from '@angular/http';
     SplashScreen,
     SpeechRecognition,
     TextToSpeech,
+    UserController,
+    MessageController,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })

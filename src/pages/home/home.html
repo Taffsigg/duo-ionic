@@ -1,8 +1,11 @@
 <div class="conversation" *ngFor="let user of users; let i = index" [class.reverse]="i === 0">
   <ion-content padding>
     <div class="message-container" [class.incoming]="message.user !== user"
-         *ngFor="let message of user.history" (click)="message.speak(tts)">
+         *ngFor="let message of user.history" (click)="message.speak()">
       <div class="message">{{message.content}}</div>
+    </div>
+    <div class="message-container processing" *ngIf="user.isListening() && !user.tempMessage.isEmpty()">
+      <div class="message">{{user.tempMessage.content}}</div>
     </div>
   </ion-content>
 
@@ -10,16 +13,16 @@
     <ion-toolbar color="light">
       <ion-grid>
         <ion-row>
-          <ion-col col-4 text-start>
+          <ion-col col-5 text-start>
             <ion-select [(ngModel)]="user.language" class="select-language"
                         [selectOptions]="{title: 'Language', cssClass: (i === 0) ? 'reverse' : null}">
               <ion-option *ngFor="let language of supportedLanguages" [value]="language">{{language}}</ion-option>
             </ion-select>
           </ion-col>
-          <ion-col col-4 text-center>
-            <button ion-button round icon-only (click)="startListening(user)"
-                    [color]="currentlyListening === user ? 'secondary': 'primary'"
-                    [disabled]="currentlyListening !== null && currentlyListening !== user">
+          <ion-col col-2 text-center>
+            <button ion-button round icon-only (click)="user.toggleListening()"
+                    [color]="user.isListening() ? 'secondary': 'primary'"
+                    [disabled]="(!user.isListening() && isListening()) || user.language === null">
               <ion-icon name="microphone"></ion-icon>
             </button>
           </ion-col>
