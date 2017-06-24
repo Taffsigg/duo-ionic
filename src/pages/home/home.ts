@@ -3,7 +3,6 @@ import { Content, IonicPage, Platform } from 'ionic-angular';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { TextToSpeech } from '@ionic-native/text-to-speech';
 import { TranslationProvider } from '../../providers/translation/translation';
-import {MediaCapture} from "@ionic-native/media-capture";
 
 export function nop() {
 }
@@ -65,12 +64,12 @@ export class HomePage {
       // Get permission
       this.speechRecognition.isRecognitionAvailable().then((available: boolean) => {
         if (!available) {
-          alert("recognition is not available")
+          alert('recognition is not available');
         } else {
           this.speechRecognition.hasPermission().then((permission: boolean) => {
             if (!permission)
               this.speechRecognition.requestPermission();
-          })
+          });
         }
       });
     });
