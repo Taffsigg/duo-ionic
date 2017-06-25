@@ -69,4 +69,8 @@ export class HomePage {
     // if not everybody not listening, someone is
     return !this.users.every(user => !user.isListening());
   }
+
+  clearHistory() {
+    this.users.forEach(user => user.clearHistory());
+  }
 }

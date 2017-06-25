@@ -90,6 +90,7 @@
     <plugin name="cordova-plugin-ios-microphone-permissions" spec="git+https://github.com/supgeek-rod/cordova-plugin-ios-microphone-permissions.git">
         <variable name="MICROPHONE_USAGE_DESCRIPTION" value="This app needs microphone access" />
     </plugin>
+    <plugin name="cordova-plugin-screen-orientation" spec="^2.0.1" />
     <plugin name="cordova-plugin-speechrecognition" spec="^1.1.2" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />

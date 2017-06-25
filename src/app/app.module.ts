@@ -11,6 +11,7 @@ import { TextToSpeech } from '@ionic-native/text-to-speech';
 import { HttpModule } from '@angular/http';
 import { MessageController } from '../providers/messages/message-controller';
 import { UserController } from '../providers/users/user-controller';
+import {ScreenOrientation} from "@ionic-native/screen-orientation";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { UserController } from '../providers/users/user-controller';
     MyApp
   ],
   providers: [
+      ScreenOrientation,
     StatusBar,
     SplashScreen,
     SpeechRecognition,

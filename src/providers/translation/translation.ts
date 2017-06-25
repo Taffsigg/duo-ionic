@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import { translationConfig } from '../../../config';
+import { translationConfig } from '../../config';
 
 @Injectable()
 export class TranslationProvider {

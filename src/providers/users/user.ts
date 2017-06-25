@@ -2,16 +2,21 @@ import { TranslationProvider } from '../translation/translation';
 import { Message } from '../messages/message';
 import { MessageController } from '../messages/message-controller';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
-import { EventEmitter } from '@angular/core';
+import {ApplicationRef, EventEmitter} from '@angular/core';
 
 export class User {
   history: Array<Message> = [];
   tempMessage: Message = null;
 
-  constructor(public language: string|null, private messageEmitter: EventEmitter<Message>,
+  constructor(public language: string|null, private messageEmitter: EventEmitter<Message>, private ref: ApplicationRef,
               private speechRecognition: SpeechRecognition, private translation: TranslationProvider,
               private messageCtrl: MessageController) {
     this.messageEmitter.subscribe(this.addMessage.bind(this));
+  }
+
+  clearHistory() {
+    this.history = [];
+    this.ref.tick();
   }
 
   isListening() {
@@ -27,7 +32,10 @@ export class User {
     this.tempMessage = this.messageCtrl.create(this);
 
     this.speechRecognition.startListening({ language: this.language, showPartial: true })
-        .subscribe((matches: Array<string>) => this.tempMessage.update(matches[0]));
+        .subscribe((matches: Array<string>) => {
+      this.tempMessage.update(matches[0]);
+      this.ref.tick();
+    });
   }
 
   private stopListening() {
@@ -40,7 +48,7 @@ export class User {
   }
 
   private addMessage(message: Message) {
-    this.getMessage(message).then((message: Message) => this.history.push(message));
+    this.getMessage(message).then((message: Message) => this.history.push(message)).then(() => this.ref.tick());
   }
 
   private getMessage(message: Message): Promise<Message> {
@@ -51,7 +59,7 @@ export class User {
         const newMessage = message.clone();
         this.translation.translate(message.content, message.language, this.language).then((content: string) => {
           newMessage.language = this.language;
-          newMessage.content = content;
+          newMessage.update(content);
           newMessage.speak();
           resolve(newMessage);
         });
