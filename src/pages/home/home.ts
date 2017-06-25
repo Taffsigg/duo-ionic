@@ -73,4 +73,8 @@ export class HomePage {
   clearHistory() {
     this.users.forEach(user => user.clearHistory());
   }
+
+  showInfo() {
+
+  }
 }

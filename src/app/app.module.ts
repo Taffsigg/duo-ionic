@@ -12,6 +12,8 @@ import { HttpModule } from '@angular/http';
 import { MessageController } from '../providers/messages/message-controller';
 import { UserController } from '../providers/users/user-controller';
 import {ScreenOrientation} from "@ionic-native/screen-orientation";
+import { SettingsProvider } from '../providers/settings/settings';
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
   declarations: [
@@ -20,6 +22,7 @@ import {ScreenOrientation} from "@ionic-native/screen-orientation";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     HttpModule,
     HomePageModule
   ],
@@ -35,7 +38,8 @@ import {ScreenOrientation} from "@ionic-native/screen-orientation";
     TextToSpeech,
     UserController,
     MessageController,
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    SettingsProvider
   ]
 })
 export class AppModule {

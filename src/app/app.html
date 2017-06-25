@@ -9,7 +9,7 @@
     <ion-list>
       <ion-item>
         <ion-label>Speak Messages</ion-label>
-        <ion-toggle item-end></ion-toggle>
+        <ion-toggle item-end [checked]="settings.get('isSpeak')" (ionChange)="settings.set('isSpeak', $event.checked)"></ion-toggle>
       </ion-item>
     </ion-list>
   </ion-content>
