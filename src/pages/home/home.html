@@ -1,51 +1,53 @@
-<div class="conversation" *ngFor="let user of users; let i = index" [class.rotate-180]="i === 0">
-  <ion-content padding>
-    <div class="message-container" [class.incoming]="message.user !== user"
-         *ngFor="let message of user.history" (click)="message.speak()">
-      <div class="message">{{message.content}}</div>
-    </div>
-    <div class="message-container processing" *ngIf="user.isListening() && !user.tempMessage.isEmpty()">
-      <div class="message">{{user.tempMessage.content}}</div>
-    </div>
-  </ion-content>
+<div class="statusbar-padding">
+  <div class="conversation" *ngFor="let user of users; let i = index" [class.rotate-180]="i === 0">
+    <ion-content padding>
+      <div class="message-container" [class.incoming]="message.user !== user"
+           *ngFor="let message of user.history" (click)="message.speak()">
+        <div class="message">{{message.content}}</div>
+      </div>
+      <div class="message-container processing" *ngIf="user.isListening() && !user.tempMessage.isEmpty()">
+        <div class="message">{{user.tempMessage.content}}</div>
+      </div>
+    </ion-content>
 
-  <ion-footer>
-    <ion-toolbar color="light">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-5 text-start>
-            <ion-select [(ngModel)]="user.language" class="select-language"
-                        [selectOptions]="{title: 'Language', cssClass: (i === 0) ? 'rotate-180' : null}">
-              <ion-option *ngFor="let language of supportedLanguages" [value]="language">{{language}}</ion-option>
-            </ion-select>
-          </ion-col>
-          <ion-col col-2 text-center>
-            <button ion-button round icon-only (click)="user.toggleListening()"
-                    [color]="user.isListening() ? 'secondary': 'primary'"
-                    [disabled]="(!user.isListening() && isListening()) || user.language === null">
-              <ion-icon name="microphone"></ion-icon>
-            </button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-toolbar>
-  </ion-footer>
+    <ion-footer>
+      <ion-toolbar color="light">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-5 text-start>
+              <ion-select [(ngModel)]="user.language" class="select-language"
+                          [selectOptions]="{title: 'Language', cssClass: (i === 0) ? 'rotate-180' : null}">
+                <ion-option *ngFor="let language of supportedLanguages" [value]="language">{{language}}</ion-option>
+              </ion-select>
+            </ion-col>
+            <ion-col col-2 text-center>
+              <button ion-button round icon-only (click)="user.toggleListening()"
+                      [color]="user.isListening() ? 'secondary': 'primary'"
+                      [disabled]="(!user.isListening() && isListening()) || user.language === null">
+                <ion-icon name="microphone"></ion-icon>
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-toolbar>
+    </ion-footer>
+  </div>
+
+  <ion-fab start middle>
+    <button ion-fab mini color="light" menuToggle class="rotate-270">
+      <ion-icon name="settings"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <ion-fab center middle>
+    <button ion-fab mini color="primary" (click)="clearHistory()">
+      <ion-icon name="remove"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <ion-fab end middle>
+    <button ion-fab mini color="light" (click)="showInfo()" class="rotate-90">
+      <ion-icon name="information"></ion-icon>
+    </button>
+  </ion-fab>
 </div>
-
-<ion-fab start middle>
-  <button ion-fab mini color="light" menuToggle class="rotate-270">
-    <ion-icon name="settings"></ion-icon>
-  </button>
-</ion-fab>
-
-<ion-fab center middle>
-  <button ion-fab mini color="primary" (click)="clearHistory()">
-    <ion-icon name="remove"></ion-icon>
-  </button>
-</ion-fab>
-
-<ion-fab end middle>
-  <button ion-fab mini color="light" (click)="showInfo()" class="rotate-90">
-    <ion-icon name="information"></ion-icon>
-  </button>
-</ion-fab>

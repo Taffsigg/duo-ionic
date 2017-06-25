@@ -18,13 +18,12 @@ export class SettingsProvider {
 
   private load(): Promise<any> {
     return this.storage.get("settings")
-        .then(settings => JSON.parse(settings))
         .then(settings => Object.keys(settings).forEach(key => this.settings[key] = settings[key]))
         .catch(() => {});
   }
 
   private save(): Promise<any> {
-    return this.storage.set("settings", JSON.stringify(this.settings));
+    return this.storage.set("settings", this.settings);
   }
 
   set(setting: string, val: any) {

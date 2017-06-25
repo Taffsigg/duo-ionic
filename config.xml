@@ -26,8 +26,12 @@
     <preference name="FadeSplashScreenDuration" value="300" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="loadUrlTimeoutValue" value="700000" />
+    <allow-navigation href="http://localhost:8080/*" />
+    <feature name="CDVWKWebViewEngine">
+        <param name="ios-package" value="CDVWKWebViewEngine" />
+    </feature>
+    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -96,5 +100,6 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
     <plugin name="cordova-plugin-tts" spec="^0.2.3" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
+    <plugin name="cordova-plugin-wkwebview-engine" spec="git+https://github.com/ionic-team/cordova-plugin-wkwebview-engine.git" />
     <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
 </widget>

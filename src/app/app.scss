@@ -1,3 +1,4 @@
+// Add rotation classes
 @each $i in 1, 2, 3 {
   $deg: $i * 90;
   .rotate-#{$deg} {
