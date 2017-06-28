@@ -4,12 +4,14 @@ import {Platform} from "ionic-angular";
 
 interface Settings {
   isSpeak: boolean;
+  speechSpeed: number;
 }
 
 @Injectable()
 export class SettingsProvider {
   settings: Settings = {
-    isSpeak: true
+    isSpeak: true,
+    speechSpeed: 1
   };
 
   constructor(platform: Platform, private storage: Storage) {

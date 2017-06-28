@@ -27,7 +27,8 @@ export class Message {
 
     return this.tts.speak({
       text: this.content,
-      locale: this.language
+      locale: this.language,
+      rate: 1.5 * this.settings.get('speechSpeed')
     });
   }
 }

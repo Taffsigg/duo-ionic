@@ -8,10 +8,10 @@ import { Message } from '../messages/message';
 @Injectable()
 export class UserController {
   constructor(private speechRecognition: SpeechRecognition, private translation: TranslationProvider,
-              private messageCtrl: MessageController, private ref: ApplicationRef) {
+              private messageCtrl: MessageController) {
   }
 
-  create(language: string, messageEmitter: EventEmitter<Message>): User {
-    return new User(language, messageEmitter, this.ref, this.speechRecognition, this.translation, this.messageCtrl);
+  create(language: string, messageEmitter: EventEmitter<Message>, updateEmitter: EventEmitter<any>): User {
+    return new User(language, messageEmitter, updateEmitter, this.speechRecognition, this.translation, this.messageCtrl);
   }
 }

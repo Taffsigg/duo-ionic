@@ -1,10 +1,11 @@
-import { Component, EventEmitter, QueryList, ViewChildren } from '@angular/core';
+import {ApplicationRef, Component, EventEmitter, QueryList, ViewChildren} from '@angular/core';
 import { AlertController, Content, IonicPage, Platform } from 'ionic-angular';
 import { SpeechRecognition } from '@ionic-native/speech-recognition';
 import { User } from '../../providers/users/user';
 import { UserController } from '../../providers/users/user-controller';
 import { Message } from '../../providers/messages/message';
 import { MessageController } from '../../providers/messages/message-controller';
+import {TranslationProvider} from "../../providers/translation/translation";
 
 @IonicPage()
 @Component({
@@ -18,8 +19,11 @@ export class HomePage {
 
   users: Array<User> = [];
 
+  private messageEmitter: EventEmitter<Message> = new EventEmitter<Message>();
+
   constructor(platform: Platform, private speechRecognition: SpeechRecognition, private alertCtrl: AlertController,
-              private userCtrl: UserController, private messageCtrl: MessageController) {
+              private userCtrl: UserController, private messageCtrl: MessageController, private ref: ApplicationRef,
+              private translation: TranslationProvider) {
     platform.ready().then(this.init.bind(this));
   }
 
@@ -53,16 +57,21 @@ export class HomePage {
   }
 
   private initUsers() {
-    const messageEmitter: EventEmitter<Message> = new EventEmitter<Message>();
+    const updateEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     let userLanguage = navigator.language;
     if (this.supportedLanguages.indexOf(userLanguage) === -1)
       userLanguage = null;
 
-    this.users.push(this.userCtrl.create(userLanguage, messageEmitter)); // Create user with local language
-    this.users.push(this.userCtrl.create('en-US', messageEmitter)); // TODO find which country user is in, and use GPS to set language
+    this.users.push(this.userCtrl.create(userLanguage, this.messageEmitter, updateEmitter)); // Create user with local language
+    this.users.push(this.userCtrl.create('en-US', this.messageEmitter, updateEmitter)); // TODO find which country user is in, and use GPS to set language
 
-    messageEmitter.emit(this.messageCtrl.create(this.users[1], 'Initializing'));
+    this.greet();
+
+    updateEmitter.subscribe(() => {
+      this.ref.tick();
+      setTimeout(() => this.contents.forEach(content => content.scrollToBottom()), 0);
+    });
   }
 
   isListening(): boolean {
@@ -74,7 +83,14 @@ export class HomePage {
     this.users.forEach(user => user.clearHistory());
   }
 
-  showInfo() {
+  greet() {
+    const getGreet = (user) => this.translation.translate("Hello!", "en-US", user.language);
 
+    getGreet(this.users[0]).then((message) => {
+      this.messageEmitter.emit(this.messageCtrl.create(this.users[0], message));
+      getGreet(this.users[1]).then((message) => {
+        this.messageEmitter.emit(this.messageCtrl.create(this.users[0], message));
+      });
+    });
   }
 }

@@ -11,6 +11,13 @@
         <ion-label>Speak Messages</ion-label>
         <ion-toggle item-end [checked]="settings.get('isSpeak')" (ionChange)="settings.set('isSpeak', $event.checked)"></ion-toggle>
       </ion-item>
+      <ion-item><!-- TODO [value]="settings.get('speechSpeed')" --><!-- TODO don't round step -->
+        <ion-range [min]="0.5" [max]="1.5" [pin]="true" [step]="0.1" [disabled]="!settings.get('isSpeak')"
+                   (ionBlur)="settings.set('speechSpeed', $event.value)">
+          <ion-label range-left>0.5</ion-label>
+          <ion-label range-right>1.5</ion-label>
+        </ion-range>
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>

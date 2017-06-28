@@ -8,7 +8,7 @@ export class User {
   history: Array<Message> = [];
   tempMessage: Message = null;
 
-  constructor(public language: string|null, private messageEmitter: EventEmitter<Message>, private ref: ApplicationRef,
+  constructor(public language: string|null, private messageEmitter: EventEmitter<Message>, private updateEmitter: EventEmitter<any>,
               private speechRecognition: SpeechRecognition, private translation: TranslationProvider,
               private messageCtrl: MessageController) {
     this.messageEmitter.subscribe(this.addMessage.bind(this));
@@ -16,7 +16,7 @@ export class User {
 
   clearHistory() {
     this.history = [];
-    this.ref.tick();
+    this.updateEmitter.emit();
   }
 
   isListening() {
@@ -33,8 +33,12 @@ export class User {
 
     this.speechRecognition.startListening({ language: this.language, showPartial: true })
         .subscribe((matches: Array<string>) => {
-      this.tempMessage.update(matches[0]);
-      this.ref.tick();
+      const match = matches[0];
+
+      if(this.isListening()) {
+        this.tempMessage.update(match);
+        this.updateEmitter.emit();
+      }
     });
   }
 
@@ -48,7 +52,7 @@ export class User {
   }
 
   private addMessage(message: Message) {
-    this.getMessage(message).then((message: Message) => this.history.push(message)).then(() => this.ref.tick());
+    this.getMessage(message).then((message: Message) => this.history.push(message)).then(() => this.updateEmitter.emit());
   }
 
   private getMessage(message: Message): Promise<Message> {

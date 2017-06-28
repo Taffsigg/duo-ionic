@@ -12,7 +12,10 @@ export class TranslationProvider {
   }
 
   private googleTranslate(text: string, sourceLanguage: string, toLanguage: string): Promise<string> {
-    let params = {
+      if (sourceLanguage === toLanguage)
+          return Promise.resolve(text);
+
+    const params = {
       client: 'gtx',
       sl: sourceLanguage,
       tl: toLanguage,
