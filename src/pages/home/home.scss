@@ -1,11 +1,10 @@
-$border-width: 1px;
-
 page-home {
   background-color: white;
 
   .conversation {
-    border-top: $border-width solid rgba(0, 0, 0, 0.3);
-    height: calc(50vh - #{$border-width});
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+    height: 50vh;
+    box-sizing: border-box;
   }
 
   .message-container {

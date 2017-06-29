@@ -89,7 +89,7 @@ export class HomePage {
     getGreet(this.users[0]).then((message) => {
       this.messageEmitter.emit(this.messageCtrl.create(this.users[0], message));
       getGreet(this.users[1]).then((message) => {
-        this.messageEmitter.emit(this.messageCtrl.create(this.users[0], message));
+        this.messageEmitter.emit(this.messageCtrl.create(this.users[1], message));
       });
     });
   }
