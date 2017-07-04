@@ -21,8 +21,12 @@ export class HomePage {
 
   private messageEmitter: EventEmitter<Message> = new EventEmitter<Message>();
 
-  constructor(platform: Platform, private speechRecognition: SpeechRecognition, private alertCtrl: AlertController,
-              private userCtrl: UserController, private messageCtrl: MessageController, private ref: ApplicationRef,
+  constructor(platform: Platform,
+              private ref: ApplicationRef,
+              private alertCtrl: AlertController,
+              private speechRecognition: SpeechRecognition,
+              private userCtrl: UserController,
+              private messageCtrl: MessageController,
               private translation: TranslationProvider) {
     platform.ready().then(this.init.bind(this));
   }
@@ -44,16 +48,18 @@ export class HomePage {
       }).present();
     };
 
-    this.speechRecognition.isRecognitionAvailable().then((available: boolean) => {
-      if (!available) {
-        notAvailable();
-      } else {
-        this.speechRecognition.hasPermission().then((permission: boolean) => {
-          if (!permission)
-            this.speechRecognition.requestPermission();
-        });
-      }
-    }, notAvailable);
+    this.speechRecognition.isRecognitionAvailable()
+        .then((available: boolean) => {
+          if (!available) {
+            notAvailable();
+          } else {
+            this.speechRecognition.hasPermission()
+                .then((permission: boolean) => {
+                  if (!permission)
+                    this.speechRecognition.requestPermission().catch(notAvailable);
+                }).catch(notAvailable);
+          }
+        }).catch(notAvailable);
   }
 
   private initUsers() {

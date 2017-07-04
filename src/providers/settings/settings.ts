@@ -14,7 +14,8 @@ export class SettingsProvider {
     speechSpeed: 1
   };
 
-  constructor(platform: Platform, private storage: Storage) {
+  constructor(platform: Platform,
+              private storage: Storage) {
     platform.ready().then(this.load.bind(this));
   }
 
@@ -24,11 +25,11 @@ export class SettingsProvider {
         .catch(() => {});
   }
 
-  private save(): Promise<any> {
-    return this.storage.set("settings", this.settings);
+  private async save(): Promise<any> {
+    return await this.storage.set("settings", this.settings);
   }
 
-  set(setting: string, val: any) {
+  async set(setting: string, val: any) {
     this.settings[setting] = val;
     this.save();
   }

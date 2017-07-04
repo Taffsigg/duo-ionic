@@ -7,7 +7,8 @@ import {SettingsProvider} from "../settings/settings";
 @Injectable()
 
 export class MessageController {
-  constructor(private tts: TextToSpeech, private settings: SettingsProvider) {
+  constructor(private tts: TextToSpeech,
+              private settings: SettingsProvider) {
   }
 
   create(user: User, text: string = null): Message {

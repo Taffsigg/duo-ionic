@@ -5,7 +5,10 @@ import {SettingsProvider} from "../settings/settings";
 export class Message {
   public language: string;
 
-  constructor(public content: string, public user: User, private tts: TextToSpeech, private settings: SettingsProvider) {
+  constructor(public content: string,
+              public user: User,
+              private tts: TextToSpeech,
+              private settings: SettingsProvider) {
     this.language = user.language;
   }
 

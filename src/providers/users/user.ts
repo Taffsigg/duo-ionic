@@ -1,17 +1,28 @@
 import { TranslationProvider } from '../translation/translation';
 import { Message } from '../messages/message';
 import { MessageController } from '../messages/message-controller';
-import { SpeechRecognition } from '@ionic-native/speech-recognition';
-import {ApplicationRef, EventEmitter} from '@angular/core';
+import { SpeechRecognition, SpeechRecognitionListeningOptionsAndroid, SpeechRecognitionListeningOptionsIOS } from '@ionic-native/speech-recognition';
+import {EventEmitter} from '@angular/core';
+import {Platform} from "ionic-angular";
 
 export class User {
   history: Array<Message> = [];
   tempMessage: Message = null;
 
-  constructor(public language: string|null, private messageEmitter: EventEmitter<Message>, private updateEmitter: EventEmitter<any>,
-              private speechRecognition: SpeechRecognition, private translation: TranslationProvider,
-              private messageCtrl: MessageController) {
+  options: SpeechRecognitionListeningOptionsAndroid | SpeechRecognitionListeningOptionsIOS;
+
+  constructor(public language: string|null,
+              private messageEmitter: EventEmitter<Message>,
+              private updateEmitter: EventEmitter<any>,
+              private speechRecognition: SpeechRecognition,
+              private translation: TranslationProvider,
+              private messageCtrl: MessageController,
+              platform: Platform) {
     this.messageEmitter.subscribe(this.addMessage.bind(this));
+
+      this.options = platform.is('android') ?
+          { matches: 1, showPopup: false } :
+          { matches: 1, showPartial: true }
   }
 
   clearHistory() {
@@ -31,7 +42,8 @@ export class User {
 
     this.tempMessage = this.messageCtrl.create(this);
 
-    this.speechRecognition.startListening({ language: this.language, showPartial: true })
+    this.options.language = this.language;
+    this.speechRecognition.startListening(this.options)
         .subscribe((matches: Array<string>) => {
       const match = matches[0];
 

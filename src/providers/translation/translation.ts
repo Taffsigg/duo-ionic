@@ -4,7 +4,7 @@ import { translationConfig } from '../../config';
 
 @Injectable()
 export class TranslationProvider {
-  constructor(public http: Http) {
+  constructor(private http: Http) {
   }
 
   translate(text: string, sourceLanguage: string, toLanguage: string): Promise<string> {
