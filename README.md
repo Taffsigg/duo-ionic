@@ -10,5 +10,5 @@ The app is no longer being developed, so there is no reason for the source not t
 ## Screenshots
 | Screenshot 1                                          | Screenshot 2                                          | Screenshot 3                                           |
 |-------------------------------------------------------|-------------------------------------------------------|--------------------------------------------------------|
-| ![screenshot1](resources/screenshots/screenshot01.png) | ![screenshot2](resources/screenshots/screenshot02.png) | ![screenshot3](resources/screenshots/screenshot013.png) |
+| ![screenshot1](resources/screenshots/screenshot01.png) | ![screenshot2](resources/screenshots/screenshot02.png) | ![screenshot3](resources/screenshots/screenshot03.png) |
 
