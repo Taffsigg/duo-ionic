@@ -8,7 +8,11 @@ It is public to be used as a reference to the ionic native speech recognition, t
 The app is no longer being developed, so there is no reason for the source not to be public.
 
 ## Screenshots
-| Screenshot 1                                          | Screenshot 2                                          | Screenshot 3                                           |
-|-------------------------------------------------------|-------------------------------------------------------|--------------------------------------------------------|
+| Screenshot 1                                           | Screenshot 2                                           | Screenshot 3                                           |
+|--------------------------------------------------------|--------------------------------------------------------|--------------------------------------------------------|
 | ![screenshot1](resources/screenshots/screenshot01.png) | ![screenshot2](resources/screenshots/screenshot02.png) | ![screenshot3](resources/screenshots/screenshot03.png) |
 
+## Concept and final result
+| Original Concept                       | Final Design                             |
+|----------------------------------------|------------------------------------------|
+| ![concept](readme-assets/original.png) | ![final design](readme-assets/final.png) |
