@@ -1,4 +1,5 @@
 # Duo - Travel Translator
+
 Duo makes your traveling conversations much nicer, by providing a real time translation between any two languages, and a great UI for a 2 people conversation!
 (I find Google Translate's interface awkward to use, and hard to find)
 
